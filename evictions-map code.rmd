@@ -7,7 +7,7 @@ output: html_document
 
 
 # 2020 Boston Eviction Data
-```{r Loading Libraries, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
+```{r Loading Libraries, warning=FALSE, message=FALSE, results='hide'}
 library(tidycensus)
 library(tidyverse)
 options(tigris_use_cache = TRUE)
@@ -28,7 +28,7 @@ lat_lon_CRS <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
 
 ```
 
-```{r Loading Data, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
+```{r Loading Data, warning=FALSE, message=FALSE, results='hide'}
 #Evictions Data: Evictions Filed in and around Boston. Average for 2012, 2013, 2015, 2016
 #Last four digit naming convention: boston_yearmoda.csv Weekly on Saturdays, one week behind. 
 evictions <- read.csv("https://evictionlab.org/uploads/boston_20201031.csv")%>%
@@ -73,7 +73,7 @@ bos_evict <- st_as_sf(inner_join(evictions, full_data, by = "GEOID"),
 ```
 
 
-```{r Making the map, echo = FALSE, warning=FALSE, message=FALSE, results='hide'}
+```{r Making the map, warning=FALSE, message=FALSE, results='hide'}
 
 
 #Labels for the pop-ups
@@ -107,7 +107,7 @@ polymap <- leaflet(bos_evict) %>%
   addControl(data_source,
              position = "bottomleft")
 
-saveWidget(polymap, file = "evictions-map.html")
+#saveWidget(polymap, file = "evictions-map.html")
 
 ```
 
@@ -120,16 +120,6 @@ cor.test(bos_evict$filings_avg, bos_evict$rIncome)
 ggplot(bos_evict, aes(x = rIncome, y = filings_avg)) +
   geom_point(size = 0.5, alpha = 0.25, position = "jitter") +
   geom_smooth() 
-  #theme_few() 
-  #scale_x_continuous(name = "Average Houeshold Age") +
-  #scale_y_continuous(name = "Annual Family Income") +
-  #annotate(geom = "text", x = 20, y= 6e+06,
-    #       label = paste("Correlation (95-percent confidence):",
-     #                    prettyNum(correlation_aoi$conf.int[1], digits = 2), 
-      #                   "to",
-       #                  prettyNum(correlation_aoi$conf.int[2], digits = 2)),
-        #   hjust = 0)
-  
 
 ```
 
