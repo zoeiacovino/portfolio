@@ -105,7 +105,11 @@ polymap <- leaflet(bos_evict) %>%
             opacity = 0.7, title = "Boston Evictions<br>Filings in 2020",
             position = "topright")%>%
   addControl(data_source,
-             position = "bottomleft")
+             position = "bottomleft")%>%
+  setMaxBounds( lng1 = -71.317234,
+                lat1 = 42.249487,
+                lng2 = -70.802250,
+                lat2 = 42.467159)
 
 saveWidget(polymap, file = "evictions-map.html")
 
