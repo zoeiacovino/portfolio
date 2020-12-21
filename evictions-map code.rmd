@@ -31,7 +31,8 @@ lat_lon_CRS <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
 ```{r Loading Data, warning=FALSE, message=FALSE, results='hide'}
 #Evictions Data: Evictions Filed in and around Boston. Average for 2012, 2013, 2015, 2016
 #Last four digit naming convention: boston_yearmoda.csv Weekly on Saturdays, one week behind. 
-evictions <- read.csv("https://evictionlab.org/uploads/boston_20201128.csv")%>%
+#evictions <- read.csv("https://evictionlab.org/uploads/boston_20201219.csv")%>%
+evictions <- read.csv("https://evictionlab.org/uploads/boston_weekly_2020_2021.csv")%>%
   group_by(GEOID) %>% 
   summarize(filings_2020 = sum(filings_2020),
             filings_avg = sum(filings_avg, na.rm = T))
