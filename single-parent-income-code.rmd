@@ -1,10 +1,15 @@
 ---
-title: "Single-Parent-Income"
+title: "Single Parent Income"
 author: "Zoe Iacovino"
 date: "4/15/2021"
 output: html_document
 ---
-```{r}
+# Code for Average Income of Single Parent Households in Massachusetts
+
+Map available here: https://zoeiacovino.github.io/portfolio/sphousehold-income-map.html
+
+
+```{r Libraries, message=FALSE, results= 'hide', warning=FALSE}
 
 library(tidycensus)
 library(tidyverse)
@@ -17,7 +22,7 @@ library(RColorBrewer)
 ```
 
 
-```{r}
+```{r Geometry, message=FALSE, results='hide', warning=FALSE}
 
 lat_lon_CRS <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
 
@@ -42,12 +47,12 @@ acs19_puma <- get_acs(state = "MA", geography = "public use microdata area",
 
 
 
-```{r}
-#"To be eligible, households must be headed by a single caretaker with children under the age of 18 and fall below 80 percent of the area median income, which is about $86,650. The 120 participants will receive monthly payments through a debit card."
+```{r Data and Map}
+#"To be eligible, households must be headed by a single caretaker with children under the age of 18 and fall below 80 percent of the area median income, which is about $86,650. The 120 participants will receive monthly payments through a debit card." (From the Boston Globe)
 
 
 
-
+#Pulling data from American Community Survey 2019 5 Year estimates 
 acs19_RISE <- get_acs(state = "MA", geography = "public use microdata area", year = 2019,
                   variables = c("B11003_016","B19128_010", "B11003_010", "B19128_007"))%>%
               mutate(variable = case_when(variable == "B11003_016" ~ "FHH",
@@ -71,7 +76,7 @@ RISE <-st_as_sf(SP_full_data,crs= lat_lon_CRS)
 RISE$label <-paste("Number of Single Parent Houesholds: ", RISE$tot_hh)%>%
             lapply(htmltools::HTML)
 
-
+#Palette for Map
 pal <- colorNumeric("YlGnBu", 
                     domain = RISE$avg_inc,
                     reverse= TRUE,
@@ -96,19 +101,18 @@ polymap <- leaflet(RISE) %>%
             position = "topright")%>%
   addControl(data_source,
              position = "bottomleft")
-  #setMaxBounds( lng1 = -71.317234,
-                #lat1 = 42.249487,
-                #lng2 = -70.802250,
-                #lat2 = 42.467159)
-
-
+ 
 
 polymap
 
-saveWidget(polymap, file = "sphousehold-income-map.html")
+#to save the map as its own html page 
+#saveWidget(polymap, file = "sphousehold-income-map.html")
 
-#write_csv(pub_assist, "Middlesex_Pub_Assist2019acs.csv")
-#st_write(full_data, "Single-Parent-ACS19.shp")
+#to put the dataframe in a csv
+#write_csv(RISE, "sphousehold-income-acs19.csv")
+
+#to convert dataframe to a shapefile for GIS
+#st_write(SP_full_data, "Single-Parent-ACS19.shp")
 ```
-```
+
 
