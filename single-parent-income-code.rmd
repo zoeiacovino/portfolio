@@ -49,17 +49,17 @@ acs19_puma <- get_acs(state = "MA", geography = "public use microdata area",
 acs19_RISE <- get_acs(state = "MA", geography = "public use microdata area", year = 2019,
                   variables = c("B11003_016","B11003_010", "B19128_006", "B19130_021"))%>%
               mutate(variable = case_when(variable == "B11003_016" ~ "FHH",
-                                          variable == "B19130_021" ~ "FHHINC",
+                                          variable == "B19128_010" ~ "FINC",
                                           variable == "B11003_010" ~ "MHH",
-                                          variable == "B19128_006" ~ "MHHINC"))%>%
+                                          variable == "B19128_007" ~ "MINC"))%>%
               subset(select = -moe)%>%
               pivot_wider(names_from = "variable",
                           values_from = "estimate")
 
 acs19_RISE <- acs19_RISE %>%
-  mutate(FHHINC = ifelse(is.na(FHHINC), 0 , FHHINC),
+  mutate(FINC = ifelse(is.na(FINC), 0 , FINC),
          tot_hh = (acs19_RISE$FHH + acs19_RISE$MHH),
-         avg_inc = (((acs19_RISE$FHHINC + acs19_RISE$MHHINC)/2)/tot_hh),
+         avg_inc = (((acs19_RISE$FINC + acs19_RISE$MINC)/2)/tot_hh),
          avg_eli = ifelse(avg_inc<86650, 1, 0))
 
 SP_full_data <- inner_join(acs19_RISE, acs19_puma, by = "GEOID")
