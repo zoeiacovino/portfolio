@@ -46,8 +46,10 @@ acs19_puma <- get_acs(state = "MA", geography = "public use microdata area",
 #"To be eligible, households must be headed by a single caretaker with children under the age of 18 and fall below 80 percent of the area median income, which is about $86,650. The 120 participants will receive monthly payments through a debit card."
 
 
+
+
 acs19_RISE <- get_acs(state = "MA", geography = "public use microdata area", year = 2019,
-                  variables = c("B11003_016","B11003_010", "B19128_006", "B19130_021"))%>%
+                  variables = c("B11003_016","B19128_010", "B11003_010", "B19128_007"))%>%
               mutate(variable = case_when(variable == "B11003_016" ~ "FHH",
                                           variable == "B19128_010" ~ "FINC",
                                           variable == "B11003_010" ~ "MHH",
